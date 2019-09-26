@@ -1,0 +1,7 @@
+C:\Users\tonym\source\repos\Wcf_SME\obj\Debug\Wcf_SME.csprojAssemblyReference.cache
+C:\Users\tonym\source\repos\Wcf_SME\obj\Debug\Wcf_SME.csproj.CoreCompileInputs.cache
+C:\Users\tonym\source\repos\Wcf_SME\bin\Wcf_SME.dll.config
+C:\Users\tonym\source\repos\Wcf_SME\bin\Wcf_SME.dll
+C:\Users\tonym\source\repos\Wcf_SME\bin\Wcf_SME.pdb
+C:\Users\tonym\source\repos\Wcf_SME\obj\Debug\Wcf_SME.dll
+C:\Users\tonym\source\repos\Wcf_SME\obj\Debug\Wcf_SME.pdb
