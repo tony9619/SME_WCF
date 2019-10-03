@@ -46,9 +46,25 @@ namespace Wcf_SME
 
         [OperationContract]
         int perfil_usuario(string usuario);
+
+        [OperationContract]
+        System.Data.DataSet lista_usuarios();
+
+        [OperationContract]
+        System.Data.DataSet get_usuario_x_user(string usuario);
+
+        [OperationContract]
+        System.Data.DataSet get_pefiles();
+
+        [OperationContract]
+        int editar_usuario(string usuario, int id_perfil, string estado);
+
+        [OperationContract]
+        int actualizar_clave (string usuario, string clave_actual, string clave_nueva);
+
     }
 
 
-   
- 
+
+
 }

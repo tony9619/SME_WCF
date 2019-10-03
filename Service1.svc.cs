@@ -153,5 +153,65 @@ namespace Wcf_SME
             con.cerrarCon();
             return res;
         }
+
+        public System.Data.DataSet lista_usuarios()
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            string query = "select usu.id_usuario,usu.usuario,usu.activo,usu.id_perfil,p.nombre nombre_perfil " +
+                "from tb_usuarios usu " +
+                "inner join tb_perfil p " +
+                "on usu.id_perfil=p.id_perfil";
+            SqlDataAdapter ad = new SqlDataAdapter(query, con.abrirCon());
+            ad.Fill(ds);
+            con.cerrarCon();
+            return ds;
+        }
+
+        public System.Data.DataSet get_usuario_x_user(string usuario)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            string query = "select usu.id_usuario,usu.usuario,usu.activo,usu.id_perfil,p.nombre nombre_perfil " +
+                "from tb_usuarios usu " +
+                "inner join tb_perfil p " +
+                "on usu.id_perfil=p.id_perfil where usu.usuario='"+usuario+"'";
+            SqlDataAdapter ad = new SqlDataAdapter(query, con.abrirCon());
+            ad.Fill(ds);
+            con.cerrarCon();
+            return ds;
+        }
+
+        public System.Data.DataSet get_pefiles()
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            string query = "select * from tb_perfil";
+            SqlDataAdapter ad = new SqlDataAdapter(query, con.abrirCon());
+            ad.Fill(ds);
+            con.cerrarCon();
+            return ds;
+        }
+
+        public int editar_usuario(string usuario, int id_perfil, string estado)
+        {
+            int resp = 0;
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con.abrirCon();
+            cmd.CommandText = "update tb_usuarios set activo = '"+estado+"' , id_perfil ="+id_perfil+"  where usuario = '"+usuario+"'";
+            resp = cmd.ExecuteNonQuery();
+            con.cerrarCon();
+            return resp;
+        }
+
+        public int actualizar_clave(string usuario, string clave_actual, string clave_nueva)
+        {
+            int res = 0;
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con.abrirCon();
+            cmd.CommandText = "DECLARE @RetValue INT " +
+                "EXEC  @RetValue  = dbo.FT_CHANGE_PWD_APP @USUARIO = '"+usuario+"',@CREDENCIAL_ANTIGUA ='"+clave_actual+"' , @CREDENCIAL_NUEVA ='"+clave_nueva+"'; " +
+                "SELECT @RetValue";
+            res = cmd.ExecuteNonQuery();
+            con.abrirCon();
+            return res;
+        }
     }
 }
