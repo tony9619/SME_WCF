@@ -213,5 +213,414 @@ namespace Wcf_SME
             con.abrirCon();
             return res;
         }
+
+        /*MANTENIMIENTO CICLOS*/
+
+        public int InsertarCiclo(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "INSERT INTO tb_ciclos(nombre,usuario_gra,fecha_gra,ultimo_usuario,fum)" +
+                    "values(@nom,@usu_gra,@fecha_gra,@ult_us,@fum)";
+                cm.Parameters.AddWithValue("@nom", nombre);
+                cm.Parameters.AddWithValue("@usu_gra", usua_gra);
+                cm.Parameters.AddWithValue("@fecha_gra", fecha_gra);
+                cm.Parameters.AddWithValue("@ult_us", ult_us);
+                cm.Parameters.AddWithValue("@fum", fum);
+                cm.ExecuteNonQuery();
+                res = 1;
+
+                con.cerrarCon();
+            }
+            catch (Exception e)
+            {
+
+            }
+            return res;
+        }
+
+        public System.Data.DataSet BuscarCiclo(int codigo)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "SELECT * from tb_ciclos where id_ciclo = @cod";
+                cm.Parameters.AddWithValue("@cod", codigo);
+
+
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return ds;
+        }
+
+
+        public int ActualizarCiclo(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "UPDATE tb_ciclos set nombre=@nom,usuario_gra=@usu_gra,fecha_gra=@fecha_gra,ultimo_usuario=@ult_us,fum=@fum where id_ciclo=@id";
+                cm.Parameters.AddWithValue("@id", id);
+                cm.Parameters.AddWithValue("@nom", nombre);
+                cm.Parameters.AddWithValue("@usu_gra", usua_gra);
+                cm.Parameters.AddWithValue("@fecha_gra", fecha_gra);
+                cm.Parameters.AddWithValue("@ult_us", ult_us);
+                cm.Parameters.AddWithValue("@fum", fum);
+                cm.ExecuteNonQuery();
+                res = 1;
+
+                con.cerrarCon();
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            return res;
+        }
+
+        public System.Data.DataSet MostrarCiclos()
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "SELECT * from tb_ciclos";
+
+                SqlDataAdapter ad = new SqlDataAdapter(cm);
+                ad.Fill(ds);
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return ds;
+        }
+
+
+        public int EliminarCiclos(int codigo)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "DELETE from tb_ciclos where id_ciclo=@id";
+                cm.Parameters.AddWithValue("@id", codigo);
+                cm.ExecuteNonQuery();
+
+                res = 1;
+
+                con.cerrarCon();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return res;
+        }
+        /*MANTENIMIENTO CICLOS*/
+
+
+
+
+        /* MANTENIMINETO GRADO*/
+        public System.Data.DataSet ObtenerGrados()
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "select  CONCAT(gra.id_grado , '-' ,gra.nombre) as 'Grado', "+
+                "CONCAT(ci.id_ciclo, '-', ci.nombre) as 'Ciclo', "+
+                "gra.usuario_gra as 'Usuario grabacion', "+
+                "gra.fecha_gra as 'Fecha grabacion', "+
+                "gra.ultimo_usuario as 'Ultimo Usuario', "+
+                "gra.fum as 'FUM', gra.estado as 'Estado' "+
+                "from tb_grados gra "+
+                "inner "+
+                "join tb_ciclos ci "+
+                "on gra.id_ciclo = ci.id_ciclo ";
+
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return ds;
+        }
+
+
+        public string InsertarGrado(string nombre, int id_ciclo, string usu_gra, string estado)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "INSERT into tb_grados(nombre,id_ciclo,usuario_gra,estado)" +
+                            "values (@nombre,@idCiclo,@usua_gra,@estado)";
+                cm.Parameters.AddWithValue("@nombre", nombre);
+                cm.Parameters.AddWithValue("@idCiclo", id_ciclo);
+                cm.Parameters.AddWithValue("@usua_gra", usu_gra);
+                cm.Parameters.AddWithValue("@estado", estado);
+       
+                res=cm.ExecuteNonQuery();
+
+                con.cerrarCon();
+
+                if (res == 1)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }
+
+            }
+            catch (Exception e)
+            {
+                return "Ocurrio un error: "+e.Message.ToString();
+            }
+
+           
+        }
+
+
+        public string ActualizarGrado(int cod, string nombre, int id_ciclo, string ul_usu, DateTime fum,string estado)
+        {
+            int r = 0;
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con.abrirCon();
+                cmd.CommandText = "update tb_grados set nombre='"+nombre+"',id_ciclo="+id_ciclo+"," +
+                    "ultimo_usuario='"+ul_usu+"',fum='"+fum+"',estado='"+estado+"' " +
+                    "where id_grado="+cod;
+                //cmd.Parameters.AddWithValue("@id", cod);
+                //cmd.Parameters.AddWithValue("@nombre", nombre);
+                //cmd.Parameters.AddWithValue("@idCiclo", id_ciclo);
+                //cmd.Parameters.AddWithValue("@ul_usu", ul_usu);
+                //cmd.Parameters.AddWithValue("@fum", fum);
+                //cmd.Parameters.AddWithValue("@estado", estado);
+
+                r =cmd.ExecuteNonQuery();
+
+                con.cerrarCon();
+
+                if (r == 1)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }
+            }
+            catch (Exception e)
+            {
+                return "Ocurrio un error: " + e.Message.ToString();
+
+            }
+
+      
+        }
+
+
+        public System.Data.DataSet BuscarGrado(int codigo)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "SELECT * from tb_grados where id_grado=@cod";
+                cm.Parameters.AddWithValue("@cod", codigo);
+
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return ds;
+        }
+
+        public int EliminarGrado(int codigo)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "DELETE from tb_grados where id_grado=@id";
+                cm.Parameters.AddWithValue("@id", codigo);
+                cm.ExecuteNonQuery();
+
+                res = 1;
+
+                con.cerrarCon();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return res;
+        }
+
+        /*    FIN MANTENIMENTO GRADOS    */
+
+
+
+        /*MANTENIMIENTO SECCIONES*/
+        public int InsertarSeccion(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "INSERT into tb_secciones (nombre,usuario_gra,fecha_gra,ultimo_usuario,fum)" +
+                    "values (@nombre,@usu_gra,@fech_gra,@ul_usua,@fum)";
+                cm.Parameters.AddWithValue("@nombre", nombre);
+                cm.Parameters.AddWithValue("@usu_gra", usua_gra);
+                cm.Parameters.AddWithValue("@fech_gra", fecha_gra);
+                cm.Parameters.AddWithValue("@ul_usua", ult_us);
+                cm.Parameters.AddWithValue("@fum", fum);
+
+                cm.ExecuteNonQuery();
+                res = 1;
+
+                con.cerrarCon();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return res;
+        }
+
+
+        public System.Data.DataSet BuscarSeccion(int codigo)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "SELECT * from tb_secciones where id_seccion=@cod";
+                cm.Parameters.AddWithValue("@cod", codigo);
+
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return ds;
+        }
+
+
+        public int ActualizarSeccion(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum)
+        {
+            int r = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con.abrirCon();
+                cmd.CommandText = "UPDATE tb_secciones set nombre=@nombre,usuario_gra=@usua_gra,fecha_gra=@fecha_gra,ultimo_usuario=@ul_usu,fum=@fum where id_seccion=@id";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                cmd.Parameters.AddWithValue("@usua_gra", usua_gra);
+                cmd.Parameters.AddWithValue("@fecha_gra", fecha_gra);
+                cmd.Parameters.AddWithValue("@ul_usu", ult_us);
+                cmd.Parameters.AddWithValue("@fum", fum);
+
+                cmd.ExecuteNonQuery();
+
+                r = 1;
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return r;
+        }
+
+        public System.Data.DataSet MostrarSecciones()
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+
+            try
+            {
+                SqlCommand cm = new SqlCommand("SELECT * from tb_secciones", con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return ds;
+        }
+
+
+        public int EliminarSeccion(int codigo)
+        {
+            int resp = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con.abrirCon();
+                cmd.CommandText = "DELETE from tb_secciones where id_seccion=@cod";
+                cmd.Parameters.AddWithValue("@cod", codigo);
+
+                cmd.ExecuteNonQuery();
+
+                resp = 1;
+
+                con.cerrarCon();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return resp;
+        }
+        /*FIN MANTENIMIENTO SECCIONES*/
     }
 }

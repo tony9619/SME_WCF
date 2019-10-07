@@ -62,9 +62,70 @@ namespace Wcf_SME
         [OperationContract]
         int actualizar_clave (string usuario, string clave_actual, string clave_nueva);
 
+        /*MANTENIMIENTO CICLOS*/
+        [OperationContract]
+        int InsertarCiclo(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum);
+
+        [OperationContract]
+        System.Data.DataSet BuscarCiclo(int codigo);
+
+        [OperationContract]
+        int ActualizarCiclo(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum);
+
+        [OperationContract]
+        System.Data.DataSet MostrarCiclos();
+
+        [OperationContract]
+        int EliminarCiclos(int codigo);
+        /*MANTENIMIENTO CICLOS*/
+
+
+
+
+
+        /* MANTENIMIENTO GRADOS*/
+
+        [OperationContract]
+        System.Data.DataSet ObtenerGrados();
+
+        [OperationContract]
+        string InsertarGrado(string nombre, int id_ciclo, string usu_gra,string estado);
+
+        [OperationContract]
+        string ActualizarGrado(int cod, string nombre, int id_ciclo, string ul_usu, DateTime fum, string estado);
+
+        [OperationContract]
+        System.Data.DataSet BuscarGrado(int codigo);
+
+        [OperationContract]
+        int EliminarGrado(int codigo);
+        /* MANTENIMIENTO GRADOS*/
+
+
+
+
+        /*MANTENIMIENTO SECCIONES*/
+        [OperationContract]
+        int InsertarSeccion(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum);
+
+        [OperationContract]
+        System.Data.DataSet BuscarSeccion(int codigo);
+
+        [OperationContract]
+        int ActualizarSeccion(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum);
+
+        [OperationContract]
+        System.Data.DataSet MostrarSecciones();
+
+        [OperationContract]
+        int EliminarSeccion(int codigo);
+
+        /*MANTENIMIENTO SECCIONES*/
     }
 
-
-
-
 }
+
+
+
+
+
