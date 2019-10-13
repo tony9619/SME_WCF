@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="Clases\Conexion.cs" />
     <Compile Include="Clases\Listado_Opciones_Perfil.cs" />
+    <Compile Include="IParametrizacion.cs" />
+    <Compile Include="Parametrizacion.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>

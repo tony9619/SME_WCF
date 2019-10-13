@@ -121,6 +121,36 @@ namespace Wcf_SME
         int EliminarSeccion(int codigo);
 
         /*MANTENIMIENTO SECCIONES*/
+
+
+        /*MANTENIMIENTO DE PARAMETRIZACION LECTURA Y ESCRITURA*/
+        //gmaldonado 7/10/2019
+        [OperationContract]
+        System.Data.DataSet ListaParametros();
+
+        [OperationContract]
+        System.Data.DataSet Busqueda_parametro_valor(string valor);
+
+        [OperationContract]
+        string Actualizacion_parametro(string parametro, string valor);
+
+        [OperationContract]
+        System.Data.DataSet Get_Opciones(int id_perfil);
+
+        [OperationContract]
+        string prueba(string valor);
+
+        [OperationContract]
+        string Agregar_opciones_perfil(int id_perfil, int id_opcion);
+
+        [OperationContract]
+        string eliminar_opciones_perfil(int id_perfil);
+
+        [OperationContract]
+        System.Data.DataSet BuscarPerfil(int codigo);
+
+      
+
     }
 
 }

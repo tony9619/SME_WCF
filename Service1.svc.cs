@@ -622,5 +622,273 @@ namespace Wcf_SME
             return resp;
         }
         /*FIN MANTENIMIENTO SECCIONES*/
+
+
+        /*ENDPOINTS DE PARAMETRIZACION*/ //gmaldonado
+        public System.Data.DataSet ListaParametros()
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                SqlCommand cm = new SqlCommand("SELECT * from tb_parametros", con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+                SqlCommand cm = new SqlCommand("SELECT '"+e.Message.ToString()+"' as 'Error_Message'", con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+
+            return ds;
+        }
+        public System.Data.DataSet Busqueda_parametro_valor(string valor)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                SqlCommand cm = new SqlCommand("SELECT * from tb_parametros where parametro='"+valor+"'", con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+                SqlCommand cm = new SqlCommand("SELECT '" + e.Message.ToString() + "' as 'Error_Message'", con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+
+            return ds;
+        }
+
+        public string Actualizacion_parametro(string parametro, string valor)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "update tb_parametros " +
+                    "set valor = '"+valor+"' where parametro = '"+parametro+"'";
+
+                res = cm.ExecuteNonQuery();
+
+                con.cerrarCon();
+
+                if (res == 1)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }
+
+            }
+            catch (Exception e)
+            {
+                return "Ocurrio un error: " + e.Message.ToString();
+            }
+        }//
+
+        public System.Data.DataSet Get_Opciones(int id_perfil)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                string query = "select id_opcion,opcion,titulo,url,es_submenu, " +
+                    "sub_menu,ultimo_usuario,fecha_gra,fum,icono, " +
+                    "(select 'S' from tb_opciones_perfil pe where pe.id_opcion=op.id_opcion and pe.id_perfil='" + id_perfil + "') marca " +
+                    "from tb_opciones op";
+                SqlCommand cm = new SqlCommand(query, con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+                SqlCommand cm = new SqlCommand("SELECT '" + e.Message.ToString() + "' as 'Error_Message'", con.abrirCon());
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+
+            return ds;
+        }
+
+        public string prueba(string valor)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "insert into test values ('"+valor+"')";
+
+                res = cm.ExecuteNonQuery();
+
+                con.cerrarCon();
+
+                if (res == 1)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }
+
+            }
+            catch (Exception e)
+            {
+                return "Ocurrio un error: " + e.Message.ToString();
+            }
+        }//
+
+        public string eliminar_opciones_perfil(int id_perfil)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "delete from tb_opciones_perfil where id_perfil="+id_perfil;
+
+                res = cm.ExecuteNonQuery();
+
+                con.cerrarCon();
+
+                if (res == 1)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }
+
+            }
+            catch (Exception e)
+            {
+                return "Ocurrio un error: " + e.Message.ToString();
+            }
+        }
+        public string Agregar_opciones_perfil(int id_perfil, int id_opcion)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "insert into tb_opciones_perfil values ("+id_perfil+","+id_opcion+")";
+
+                res = cm.ExecuteNonQuery();
+
+                con.cerrarCon();
+
+                if (res == 1)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }
+
+            }
+            catch (Exception e)
+            {
+                return "Ocurrio un error: " + e.Message.ToString();
+            }
+        }
+
+        public System.Data.DataSet BuscarPerfil(int codigo)
+        {
+            System.Data.DataSet ds = new System.Data.DataSet();
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "SELECT * from tb_perfil where id_perfil = @cod";
+                cm.Parameters.AddWithValue("@cod", codigo);
+
+
+                SqlDataAdapter da = new SqlDataAdapter(cm);
+                da.Fill(ds);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return ds;
+        }
+
+        /*MANTENIMIENTO SECCIONES*/
+        public int InsertarSeccion(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum, string estado)
+        {
+            int res = 0;
+            try
+            {
+                SqlCommand cm = new SqlCommand();
+                cm.Connection = con.abrirCon();
+                cm.CommandText = "INSERT into tb_secciones (nombre,usuario_gra,fecha_gra,ultimo_usuario,fum,estado)" +
+                    "values (@nombre,@usu_gra,@fech_gra,@ul_usua,@fum,@est)";
+                cm.Parameters.AddWithValue("@nombre", nombre);
+                cm.Parameters.AddWithValue("@usu_gra", usua_gra);
+                cm.Parameters.AddWithValue("@fech_gra", fecha_gra);
+                cm.Parameters.AddWithValue("@ul_usua", ult_us);
+                cm.Parameters.AddWithValue("@fum", fum);
+                cm.Parameters.AddWithValue("@est", estado);
+
+                cm.ExecuteNonQuery();
+                res = 1;
+
+                con.cerrarCon();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return res;
+        }
+
+
+        
+
+
+        public int ActualizarSeccion(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum, string estado)
+        {
+            int r = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con.abrirCon();
+                cmd.CommandText = "UPDATE tb_secciones set nombre=@nombre,usuario_gra=@usua_gra,fecha_gra=@fecha_gra,ultimo_usuario=@ul_usu,fum=@fum,estado=@est where id_seccion=@id";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                cmd.Parameters.AddWithValue("@usua_gra", usua_gra);
+                cmd.Parameters.AddWithValue("@fecha_gra", fecha_gra);
+                cmd.Parameters.AddWithValue("@ul_usu", ult_us);
+                cmd.Parameters.AddWithValue("@fum", fum);
+                cmd.Parameters.AddWithValue("@est", estado);
+
+                cmd.ExecuteNonQuery();
+
+                r = 1;
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return r;
+        }
+
+       
+
+       
+
+        
+
     }
 }
