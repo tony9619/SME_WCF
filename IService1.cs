@@ -25,6 +25,7 @@ namespace Wcf_SME
          
     */
 
+
     [ServiceContract]
     public interface IService1
     {
@@ -36,6 +37,9 @@ namespace Wcf_SME
         System.Data.DataSet lista_municipiosx_depto(int id_depto);
         /***********************************/
 
+        [OperationContract]
+        System.Data.DataSet lista_deptos_muni(int id_muni);
+
         /*TODOS LOS ENDPOINTS DE OPCIONES*/
 
         /// NP01 *********************** OPCIONES *******************************************//////////
@@ -44,7 +48,7 @@ namespace Wcf_SME
         System.Data.DataSet ListaOpcionesxPerfil(int id_perfil); // OBTIENE TODAS LAS OPCIONES FILTRANDOLAS POR PERFIL
 
         [OperationContract]
-        System.Data.DataSet ListaOpciones_sub_menu(string sub_menu); // OBTIENEN TODAS LAS OPCIONES(SUBOPCIONES) CORRESPONDIENTES A UN SUBMENU
+        System.Data.DataSet ListaOpciones_sub_menu(string sub_menu, int id_perfil); // OBTIENEN TODAS LAS OPCIONES(SUBOPCIONES) CORRESPONDIENTES A UN SUBMENU
 
         [OperationContract]
         System.Data.DataSet Get_Opciones(int id_perfil); // OBTIENE TODAS LAS OPCIONES, PERO INDICA POR UNA MARCA 'S' SI EL PERFIL LA POSEE
@@ -59,9 +63,9 @@ namespace Wcf_SME
         System.Data.DataSet ObtenerIconoOpcion(string page); // obtiene el icono de la pagina
 
         /// ************* ****************************************************************
-        
 
-        
+
+
         /// NP02 ****************ENPOINTS DE CONFIGURACION *************************************//
 
 
@@ -107,22 +111,44 @@ namespace Wcf_SME
         /// NP04 ************* ENPOINTS DE GRADOS *****************************************//
 
         [OperationContract]
-        System.Data.DataSet Catalogos_grados(); 
+        System.Data.DataSet Catalogos_grados();
         // OBTIENE UN LISTADO DE GRADOS SIN EMBARGO NO DE LA TABLA GRADOS, ES DECIR HAY UN CATALOGO DE GRADOS INDEPENDIENTE
         //POR EJEMPLO EL CATALOGO DE GRADOS PUEDE OBTENER KINDER 4, PERO LA INDTITUCION NO IMPARTE KINDER 4, EN TABLA GRADOS
         // ESTE CATALOGO SIRVE PARA LA MATRICULA
 
         [OperationContract]
+        string obtener_abrv_grado(int id_grado);
+
+
+        [OperationContract]
         System.Data.DataSet Lista_grados_institucion(int id_turno); // OBTIENE UN LISTADO DE GRADOS QUE IMPARTE LA INSTITUCION FILTRANDOLA POR TURNOS
 
         [OperationContract]
-        System.Data.DataSet Lista_grados_secciones_grados(int id_grado); // obtiene todas las secciones asociadas a un determinado grado
+        System.Data.DataSet listado_general_grados(int id_turno,int id_anio);
 
         [OperationContract]
-        int capacidad_aula(int id_aula); // obtiene la capacidad de un aula
+        System.Data.DataSet lista_grados_sin_filtros();
+
+        [OperationContract]
+        System.Data.DataSet Lista_grados_secciones_grados(int id_grado, int id_turno); // obtiene todas las secciones asociadas a un determinado grado
+
+        [OperationContract]
+        int capacidad_aula(int id_grado, int id_turno, int id_seccion); // obtiene la capacidad de un aula
+
+        [OperationContract]
+        System.Data.DataSet listado_anios();
+
+        [OperationContract]
+        string Obtener_anio_x_id(int id_anio);
+
+        [OperationContract]
+        string Obtener_anio_x_nombre(string nombre);
 
         [OperationContract]
         int obtener_Aula(int id_grado, int id_seccion, int id_turno); // obtiene la capacidad de un aula
+
+        [OperationContract]
+        string Buscar_descripcion_grado(string cadena); // Busca un grado por la descripcion
 
 
 
@@ -130,7 +156,10 @@ namespace Wcf_SME
         System.Data.DataSet ObtenerGrados(); // OBTIENE UN LISTADO DE TODOS LOS GRADOS
 
         [OperationContract]
-        string InsertarGrado(string nombre, int id_ciclo, string usu_gra, string estado); // INGRESA UN NUEVO GRADO
+        string InsertarGrado(string nombre, int id_ciclo, string usu_gra, string estado, string abreviatura); // INGRESA UN NUEVO GRADO
+
+        [OperationContract]
+        string validarAbreviaturaGrado(string cadena);
 
         [OperationContract]
         string ActualizarGrado(int cod, string nombre, int id_ciclo, string ul_usu, string fum, string estado); // ACTUALIZA UN GRADO
@@ -149,11 +178,16 @@ namespace Wcf_SME
         [OperationContract]
         System.Data.DataSet lista_turnos(); // OBTIENE UN LISTADO DE TURNOS
 
-        [OperationContract]
-        int InsertarTurno(string descripcion, string hora_ini, string hora_fin, string usua_gra, DateTime fecha, string ul_usu, DateTime fum, string estado);
+     
 
         [OperationContract]
-        int ActualizarTurno(int cod, string descripcion, string hora_ini, string hora_fin, string usua_gra, DateTime fecha, string ul_usu, DateTime fum, string estado);
+        string validarTurnos(string nombre, string hi, string hf);
+
+        [OperationContract]
+        int InsertarTurno(string descripcion, string hora_ini, string hora_fin, string usua_gra, DateTime fecha,string estado);
+
+        [OperationContract]
+        int ActualizarTurno(int cod, string descripcion, string hora_ini, string hora_fin,string ul_usu, DateTime fum, string estado);
 
         [OperationContract]
         System.Data.DataSet ListarTurno();
@@ -169,6 +203,9 @@ namespace Wcf_SME
         // NP06 *********************** ENPOINTS DE PERFILES ************************************//
 
         [OperationContract]
+        string nombre_usuario_perfil(string usuario);
+
+        [OperationContract]
         int perfil_usuario(string usuario); // OBTIENE EL PERFIL DE UN DETERMINADO USUARIO
 
 
@@ -179,6 +216,14 @@ namespace Wcf_SME
         [OperationContract]
         System.Data.DataSet BuscarPerfil(int codigo); // RETORNA LA INFORMACION DE UN DETERMINADO PERFIL
 
+        [OperationContract]
+        string NuevoPerfil(string nombre, string estado, string usuario_gra);
+
+        [OperationContract]
+        string ActualizarPerfil(int cod_perfil, string nombre, string estado, string ultimo_usuario);
+
+        [OperationContract]
+        string validar_descripcion_perfil(string nombre);
 
         // *********************** FIN ENPOINTS DE PERFILES ************************************//
 
@@ -186,13 +231,16 @@ namespace Wcf_SME
         // NP07 ***********************  ENPOINTS DE CICLOS ************************************//
 
         [OperationContract]
-        int InsertarCiclo(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum); // INGRESA UN NUEVO CICLO
+        string validarDescripcionCiclos(string descripcion);
+
+        [OperationContract]
+        int InsertarCiclo(string nombre, string usua_gra, DateTime fecha_gra); // INGRESA UN NUEVO CICLO
 
         [OperationContract]
         System.Data.DataSet BuscarCiclo(int codigo); // BUSCA UN DETERMINADO CICLO
 
         [OperationContract]
-        int ActualizarCiclo(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum); //ACTUALIZA LA INFOR DE UN DETERMINADO CICLO
+        int ActualizarCiclo(int id, string nombre, string ult_us, DateTime fum); //ACTUALIZA LA INFOR DE UN DETERMINADO CICLO
 
         [OperationContract]
         System.Data.DataSet MostrarCiclos(); // MUESTRA UN LISTADO DE TODOS LOS CICLOS
@@ -210,17 +258,23 @@ namespace Wcf_SME
 
 
         [OperationContract]
-        int InsertarSeccion(string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum, string estado); // INGRESA UNA NUEVA SECCION
+        int InsertarSeccion(string nombre, string usua_gra, DateTime fecha_gra,string estado); // INGRESA UNA NUEVA SECCION
 
 
         [OperationContract]
         System.Data.DataSet BuscarSeccion(int codigo); // BUSCCA UNA DETERMINADA SECCION
 
         [OperationContract]
-        int ActualizarSeccion(int id, string nombre, string usua_gra, DateTime fecha_gra, string ult_us, DateTime fum, string estado); // ACTUALIZA UNA DETERMINADA SECCION
+        string ActualizarSeccion(int id, string nombre, string ult_us, DateTime fum, string estado); // ACTUALIZA UNA DETERMINADA SECCION
+
+        [OperationContract]
+        string validar_descripcion_seccion(string nombre);
 
         [OperationContract]
         System.Data.DataSet MostrarSecciones(); // MUESTRA UN LISTADO DE TODAS LAS SECCCIONES
+
+        [OperationContract]
+        System.Data.DataSet MostrarSecciones_Aulas(int id_grado, int id_turno, int id_anio);
 
         [OperationContract]
         int EliminarSeccion(int codigo);
@@ -239,6 +293,8 @@ namespace Wcf_SME
 
         [OperationContract]
         string InsertarMateria(string nombre, string usua_gra, DateTime fecha_gra);
+        [OperationContract]
+        string validar_duplicidad_materia(string cadena);
         // ******************************************************************************************//
 
         //****************************MAtricula**************************************************//
@@ -254,17 +310,17 @@ namespace Wcf_SME
             /****************************REPRESENTANTE 1********************************************/
             string rep1_name, string rep1_ape, string rep1_tel1, string rep1_tel2, string rep1_dui, string rep1_mail, string rep1_vive_alum,
             int rep1_depto, int rep1_mun, string rep1_domicilio, string rep1_trabaja, string rep1_parentesto, string rep1_empleo, string rep1_cargo, string rep1_telefono3, string rep1_dir_lab,
-            string otro_parentesco_rep1,
+            string otro_parentesco_rep1,string principal_rep1,
             ///****************************REPRESENTANTE 2********************************************/
             string rep2_name, string rep2_ape, string rep2_tel1, string rep2_tel2, string rep2_dui, string rep2_mail, string rep2_vive_alum,
             int rep2_depto, int rep2_mun, string rep2_domicilio, string rep2_trabaja, string rep2_parentesto, string rep2_empleo, string rep2_cargo, string rep2_telefono3, string rep2_dir_lab,
-            string otro_parentesco_rep2,
+            string otro_parentesco_rep2,string principal_rep2,
 
             ///****************************REPRESENTANTE 3********************************************/
 
             string rep3_name, string rep3_ape, string rep3_tel1, string rep3_tel2, string rep3_dui, string rep3_mail, string rep3_vive_alum,
             int rep3_depto, int rep3_mun, string rep3_domicilio, string rep3_trabaja, string rep3_parentesto, string rep3_empleo, string rep3_cargo, string rep3_telefono3, string rep3_dir_lab,
-            string otro_parentesco_rep3,
+            string otro_parentesco_rep3, string principal_rep3,
 
             ///************ MATRICULA ***********************************/
             int id_aula, int id_turno, int id_grado, int id_seccion,
@@ -309,6 +365,86 @@ namespace Wcf_SME
         System.Data.DataSet MostrarDocentesCodigo(int cod);
         /*FIN DOCENTES*/
 
+        [OperationContract]
+        System.Data.DataSet obtener_anio_escolar_vigente();
+
+        [OperationContract]
+        string obtener_anio_matricula();
+
+
+        /*aula*/
+        [OperationContract]
+        string ingresar_aula(string codigo, int id_grado, int id_seccion,int id_turno, int id_anio, int capacidad, string usuario, string estado);
+
+        [OperationContract]
+        System.Data.DataSet Buscar_Aula_xCod(int id_aula);
+
+        [OperationContract]
+        string editar_aula(int codigo, int id_grado, int id_seccion, int id_turno, int id_anio, int capacidad, string usuario, string estado);
+
+        [OperationContract]
+        System.Data.DataSet listado_aulas();
+
+        /***************************/
+        // asistencia
+        [OperationContract]
+        System.Data.DataSet coordinaciones(string usuario);
+
+        [OperationContract]
+        System.Data.DataSet alumnos_x_aula(int id_aula);
+
+        [OperationContract]
+        System.Data.DataSet info_aula(int id_aula);
+
+
+        /***************************/
+
+        /*COORDINADORES*/
+        [OperationContract]
+        string InsertarCoordinadores(int aula, int docente, string usu_gra, DateTime fecha_gra, string ult_usua, DateTime fum);
+
+        [OperationContract]
+        string EliminarCoor_Aula(int aula);
+
+        [OperationContract]
+        System.Data.DataSet MostrarCoodinadores();
+
+
+        [OperationContract]
+        int BuscarDocenteTurnoManana(int cod_Profe);
+
+        [OperationContract]
+        int BuscarDocenteTurnoTarde(int cod_Profe);
+
+
+
+        /*AULA*/
+
+        [OperationContract]
+        System.Data.DataSet MostrarAula(int id_turno);
+
+        [OperationContract]
+        System.Data.DataSet BuscarAulaCodigo(int codigo);
+
+        /*FIN AULA*/
+        [OperationContract]
+        string encabezado_Asistencia(string usuario_operacion,string fecha);
+
+        [OperationContract]
+         string assitencia_aula(string carnet, string estado, string permiso, int id_aula,string justificacion);
+
+        [OperationContract]
+        string validar_asistencia_aula(string fecha);
+
+        [OperationContract]
+        System.Data.DataSet lista_aula_por_dia(int id_aula, string fecha);
+
+        [OperationContract]
+        System.Data.DataSet alumnos_inasistencia_aula(int id_aula);
+
+        [OperationContract]
+
+        string notificacion_inasistencia(string alumno, string representante, int id_aula, string enviada, string sid, string catch_, string telefono1, string telefono2);
     }
 
 
